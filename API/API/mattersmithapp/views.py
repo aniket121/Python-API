@@ -34,8 +34,8 @@ jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 # Create your views here.
 class Users(APIView):
 
-	  permission_classes = (permissions.IsAuthenticated,)
-	  authentication_classes = (JSONWebTokenAuthentication,)
+	  #permission_classes = (permissions.IsAuthenticated,)
+	  #authentication_classes = (JSONWebTokenAuthentication,)
 	  #authentication_classes = (JSONWebTokenAuthentication,)
 	  #permission_classes = (permissions.IsAuthenticated,)
 	  serializer_class = UserSerializer
@@ -111,6 +111,22 @@ class project(APIView):
           allProject=Projects.objects.filter(user_id=user_id)
           jsondata = ProjectSerializer(allProject,many=True)
           return Response({'project' : jsondata.data},status.HTTP_200_OK)
+class Search(APIView):
+	  def get(self,request):
+	  	   searchInput=request.GET.get('search')
+	  	   print searchInput
+	  	   FilterRecords =User.objects.filter(Q(username__contains=searchInput) | Q(first_name__contains=searchInput))
+	  	   
+	  	   serializer =UserSerializer(data=FilterRecords,many=True)
+	  	   if serializer.is_valid():
+	  	   	   print "in if"
+	  	   	   return Response({'user':serializer.data},status.HTTP_200_OK)
+	  	   else:
+	  	   	   print "in else"
+	  	   	   return Response({'user':serializer.data},status.HTTP_200_OK)
+           
+	  
+			
 class Images(APIView):
       def post(self,request):
           user_id=request.GET.get('user_id')

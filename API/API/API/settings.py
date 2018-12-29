@@ -25,14 +25,14 @@ SECRET_KEY = 'y6wucm%1c278vc9t(s%$9mgonfw=^)l_$qh$20%w+(&8m(e5ku'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*','localhost']
+ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_WHITELIST = (
-    'localhost:3000',
+    'localhost:4200',
     'localhost:8000'
 )
 CORS_ORIGIN_ALLOW_ALL = True
 CSRF_TRUSTED_ORIGINS = (
-    'localhost:3000',
+    'localhost:4200',
 )
 CORS_ORIGIN_ALLOW_ALL = True
 # Application definition

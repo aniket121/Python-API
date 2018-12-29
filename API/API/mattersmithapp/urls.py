@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^login/', login.as_view(), name='loginUser'),
     url(r'^project/', project.as_view(), name='project'),
     url(r'^Images/', Images.as_view(), name='Images'),
+    url(r'^search/', Search.as_view(), name='Search')
 ]

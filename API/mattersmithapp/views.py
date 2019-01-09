@@ -29,6 +29,8 @@ import base64
 from mattersmithapp.serializers import *
 from django.db.models import Q
 from django.core.paginator import Paginator
+from mattersmithapp.document import userTrack
+from elasticsearch_dsl import Q
 
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -51,19 +53,22 @@ class Users(PaginatedState,APIView):
 	  #authentication_classes = (JSONWebTokenAuthentication,)
 	  #authentication_classes = (JSONWebTokenAuthentication,)
 	  #permission_classes = (permissions.IsAuthenticated,)
-	  serializer_class = UserSerializer
+	  #serializer_class = UserSerializer
 	  def get(self,request):
-	  	  print 'hi--------------',
-	  	  ModelData=User.objects.all()
-	  	  pageNumbers=[]
-	  	  paginator=Paginator(ModelData,request.GET.get('limit', ''))
-	  	  paginatedData=paginator.page(request.GET.get('page', ''))
-	  	  PaginatedState.CommomState(paginatedData,pageNumbers)
-	  	  serializeData = DynamicSerializer(paginatedData.object_list, many=True)
+	  	  try:
+		  	  ModelData=User.objects.all()
+		  	  pageNumbers=[]
+		  	  paginator=Paginator(ModelData,request.GET.get('limit', ''))
+		  	  paginatedData=paginator.page(request.GET.get('page', ''))
+		  	  PaginatedState.CommomState(paginatedData,pageNumbers)
+		  	  serializeData = DynamicSerializer(paginatedData.object_list, many=True)
+		  except Exception as e:
+		  	  return Response({'msg':"Query parameter missing or went something wrong"})
 	  	  return Response({'pages':pageNumbers,'next':paginatedData.has_next(),'prev':paginatedData.has_previous(),'range':str(paginatedData),"msg":"user list",'status' :status.HTTP_200_OK,'user':serializeData.data,'count':paginator.count})
 	  def post(self, request):
 	  	  body_unicode = request.body.decode("utf-8")
 	  	  body = json.loads(body_unicode)
+	  	  print "body==>",body
 	  	  serializer = UserSerializer(data=body)
 	  	  if serializer.is_valid():
 	  	  	User.objects.create_user(username=body['username'], first_name=body['first_name'], last_name=body['last_name'],password=body['password'],email = body['email'])
@@ -120,13 +125,13 @@ class project(APIView):
 class Search(APIView):
 	  def get(self,request):
 	  	   searchInput=request.GET.get('search')
-	  	   print searchInput
-	  	   FilterRecords =User.objects.filter(Q(username__contains=searchInput) | Q(first_name__contains=searchInput))
+	  	   #FilterRecords =User.objects.filter(Q(username__contains=searchInput) | Q(first_name__contains=searchInput))
+	  	   FilterRecords=userTrack.search().query(Q("match", username=searchInput) | Q("match", first_name=searchInput))
 	  	   pageNumbers=[]
 	  	   paginator=Paginator(FilterRecords,request.GET.get('limit', ''))
 	  	   paginatedData=paginator.page(request.GET.get('page', ''))
 	  	   PaginatedState.CommomState(paginatedData,pageNumbers)
-	  	   serializer =UserSerializer(data=FilterRecords,many=True)
+	  	   serializer =DynamicSerializer(data=FilterRecords,many=True)
 	  	   if serializer.is_valid():
 	  	   	   print "in if"
 	  	   	   return Response({'user':serializer.data},status.HTTP_200_OK)

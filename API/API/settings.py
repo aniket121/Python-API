@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'rest_framework_swagger',
+    'django_elasticsearch_dsl',
 ]
 
 MIDDLEWARE = [
@@ -87,13 +88,10 @@ TEMPLATES = [
     },
 ]
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    ),
+
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
 }
 # REST_FRAMEWORK = {
@@ -128,7 +126,11 @@ WSGI_APPLICATION = 'API.wsgi.application'
 #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
-
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'localhost:9200'
+    },
+}
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',

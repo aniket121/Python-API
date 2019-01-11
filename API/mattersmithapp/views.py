@@ -56,12 +56,13 @@ class Users(PaginatedState,APIView):
 	  #serializer_class = UserSerializer
 	  def get(self,request):
 	  	  try:
-		  	  ModelData=User.objects.all()
+		  	  ModelData=UserM.objects.all()
 		  	  pageNumbers=[]
 		  	  paginator=Paginator(ModelData,request.GET.get('limit', ''))
 		  	  paginatedData=paginator.page(request.GET.get('page', ''))
 		  	  PaginatedState.CommomState(paginatedData,pageNumbers)
 		  	  serializeData = DynamicSerializer(paginatedData.object_list, many=True)
+		  	  print serializeData
 		  except Exception as e:
 		  	  return Response({'msg':"Query parameter missing or went something wrong"})
 	  	  return Response({'pages':pageNumbers,'next':paginatedData.has_next(),'prev':paginatedData.has_previous(),'range':str(paginatedData),"msg":"user list",'status' :status.HTTP_200_OK,'user':serializeData.data,'count':paginator.count})
@@ -71,8 +72,8 @@ class Users(PaginatedState,APIView):
 	  	  print "body==>",body
 	  	  serializer = UserSerializer(data=body)
 	  	  if serializer.is_valid():
-	  	  	User.objects.create_user(username=body['username'], first_name=body['first_name'], last_name=body['last_name'],password=body['password'],email = body['email'])
-	  	  	return Response({'success':'User registered successfully'},status.HTTP_200_OK)
+	  	  	 UserM.objects.create_user(username=body['username'], first_name=body['first_name'], last_name=body['last_name'],password=body['password'],email = body['email'],bio=body['bio'])
+	  	  	 return Response({'success':'User registered successfully'},status.HTTP_200_OK)
 	  	  else:
 	  	  	return Response({'msg':'error occured while registration ! please enter valid input'},status.HTTP_404_NOT_FOUND)
 class login(APIView):

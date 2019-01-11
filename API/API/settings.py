@@ -54,7 +54,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework.authtoken',
     'corsheaders',
     'rest_framework_swagger',
     'django_elasticsearch_dsl',
@@ -116,6 +115,7 @@ CELERY_BROKER_URL = 'amqp://localhost'
 
 WSGI_APPLICATION = 'API.wsgi.application'
 
+AUTH_USER_MODEL = "mattersmithapp.UserM" 
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases

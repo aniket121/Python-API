@@ -6,17 +6,17 @@ from mattersmithapp.models import *
 
 class UserSerializer(serializers.ModelSerializer):
 	class Meta:
-		model = User
-		fields = ('username','password','first_name','last_name','is_active','is_staff','email')
+		model = UserM
+		fields = ('username','password','first_name','last_name','is_active','is_staff','email','bio')
                 def get(self):
                     print "get serilazer"
 
 class DynamicSerializer(UserSerializer):
 
     class Meta:
-        model = User
+        model = UserM
         fields = (
-            'first_name','first_name','last_name','is_active','is_staff','email','username'
+            'first_name','first_name','last_name','is_active','is_staff','email','username','bio'
         )
 
 class ProjectSerializer(serializers.ModelSerializer):

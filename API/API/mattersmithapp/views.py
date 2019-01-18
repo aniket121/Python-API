@@ -31,7 +31,8 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 from mattersmithapp.document import userTrack
 import logging
-
+from django.conf import settings
+import uuid
 #from elasticsearch_dsl import Q
 
 
@@ -147,9 +148,13 @@ class Search(APIView):
 			
 class Images(APIView):
       def post(self,request):
-          user_id=request.GET.get('user_id')
-          # TODO
-          pass
+      	  fileList={}
+          for file in request.FILES.getlist('file'):
+	          fs = FileSystemStorage()
+	          filename = fs.save(str(uuid.uuid4())+"/" + file.name, file)
+	          uploaded_file_url = fs.url(filename)
+	          fileList.update({file.name : settings.DEFAULT_PROTOCOL+"://"+settings.BASE_ADDRESS+uploaded_file_url})
+          return Response({'url' : fileList},status.HTTP_200_OK)
                  
           
               

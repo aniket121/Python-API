@@ -13,7 +13,8 @@ urlpatterns = [
     url(r'^users/', Users.as_view(), name='registerUser'),
     url(r'^login/', login.as_view(), name='loginUser'),
     url(r'^project/', project.as_view(), name='project'),
-    url(r'^Images/', Images.as_view(), name='Images'),
-    url(r'^search/', Search.as_view(), name='Search'),
+    #url(r'^images/(?P<user_id>[ \w-]+)/(?P<device_token>[ \w-]+)/$', Images.as_view(), name='Images'),
+    url(r'^images/', Images.as_view(), name='Images'),
+    url(r'^search/$', Search.as_view(), name='Search'),
     url(r'^case/', include('mattersmithapp.case.urls',namespace='case'))
 ]

@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-
+import sys
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -45,8 +45,9 @@ CORS_ALLOW_METHODS = (
     'PUT',
 )
 
-INSTALLED_APPS = [
-    'mattersmithapp',
+
+
+PREREQ_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -57,15 +58,23 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework_swagger',
     'django_elasticsearch_dsl',
+]
+
+PROJECT_APPS = [
+   'mattersmithapp',
+   'login'
 
 
 ]
+
+INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django_otp.middleware.OTPMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -225,6 +234,9 @@ DEFAULT_PROTOCOL = "http"
  
 BASE_ADDRESS = 'localhost:8000'
 
+
+PROJECT_ROOT = os.path.dirname(__file__)
+sys.path.insert(0, os.path.join(PROJECT_ROOT, 'apps'))
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/

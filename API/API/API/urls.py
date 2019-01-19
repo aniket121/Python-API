@@ -18,10 +18,11 @@ from django.contrib import admin
 from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.conf import settings
-
+from apps import *
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api/', include('mattersmithapp.urls',namespace='mattersmithapp')),
+    url(r'^api/', include('mattersmithapp.urls',namespace='api')),
+    url(r'^api/', include('login.urls',namespace='login')),
     
 ]
 if settings.DEBUG:

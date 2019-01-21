@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/1.10/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
-
+#https://stackoverflow.com/questions/45563194/django-rest-permissions-allow-both-isadmin-and-custom-permission
 import os
 import sys
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -82,21 +82,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'API.urls'
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
+
 REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -210,12 +196,28 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
 
 EMAIL_USE_TLS = True
 EMAIL_HOST ='smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER ='pran9665@gmail.com'
-EMAIL_HOST_PASSWORD ='sahil2011'
+EMAIL_HOST_USER ='aniket57gholap22@gmail.com'
+EMAIL_HOST_PASSWORD ='AAniket123*'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/

@@ -33,6 +33,13 @@ from mattersmithapp.document import userTrack
 import logging
 from django.conf import settings
 import uuid
+from django.core.mail import EmailMessage
+from django.template.loader import get_template
+from django.template import Context
+
+username = "fry"
+password = "password_yo"
+full_name = "Philip J Fry"
 #from elasticsearch_dsl import Q
 
 
@@ -51,9 +58,9 @@ class PaginatedState(APIView):
 	  	 else:
 	  	  	pageNumbers.append({'next_page':'null','prev_page':'null'})
 class Users(PaginatedState,APIView):
-
-	  #permission_classes = (permissions.IsAuthenticated,)
-	  #authentication_classes = (JSONWebTokenAuthentication,)
+	  
+	  permission_classes = (permissions.IsAuthenticated,)
+	  authentication_classes = (JSONWebTokenAuthentication,)
 	  def get(self,request):
 	  	  try:
 		  	  ModelData=UserM.objects.all()
@@ -72,38 +79,23 @@ class Users(PaginatedState,APIView):
 	  	  print "body==>",body
 	  	  serializer = UserSerializer(data=body)
 	  	  if serializer.is_valid():
-	  	  	 UserM.objects.create_user(username=body['username'], first_name=body['first_name'], last_name=body['last_name'],password=body['password'],email = body['email'],bio=body['bio'])
+	  	  	 UserObject=UserM.objects.create_user(username=body['username'], first_name=body['first_name'], last_name=body['last_name'],password=body['password'],email = body['email'],bio=body['bio'])
+
+	  	  	 """
+	  	  	 email = EmailMessage('Subject',get_template('../templates/email.html').render(
+             Context({
+	            'username': username,
+	            'password': password,
+	            'full_name': full_name
+            })
+            ), to=['aniket57gholap22@gmail.com'])
+	  	  	 email.content_subtype = 'html'
+	  	  	 email.send()
+	  	  	 """
 	  	  	 return Response({'success':'User registered successfully'},status.HTTP_200_OK)
 	  	  else:
 	  	  	return Response({'msg':'error occured while registration ! please enter valid input'},status.HTTP_404_NOT_FOUND)
-# class login(APIView):
-# 	  permission_classes = (permissions.AllowAny,)
 
-# 	  def post(self, request):
-# 	  	  if request.method =="POST":
-# 	  	  	 body_unicode = request.body.decode("utf-8")
-# 	  	  	 body = json.loads(body_unicode)
-# 			 username = body["username"]
-# 			 password = body["password"]
-# 			 user = authenticate(username=username, password=password)
-# 			 token=None;
-# 			 if user is not None:
-# 			 	payload=jwt_payload_handler(user)
-# 			 	token=jwt_encode_handler(payload)
-# 			 	if user.is_active:
-# 			 	 	user = User.objects.get(pk=user.id)
-# 					user.profile.token =token
-# 					user.save()
-# 			 	 	if user.is_superuser and user.is_staff:
-# 			 	 	   return Response({'id' : user.id,'token':token, 'username':user.username,'status':status.HTTP_200_OK, 'user':'superuser'})
-# 			 	 	elif user.is_staff:
-# 					    return Response({'id' : user.id,'token':token, 'username':user.username,'status':status.HTTP_200_OK, 'user':"admin"})
-# 					else:
-# 						return Response({'id' : user.id,'token':token, 'username':user.username,'status':status.HTTP_200_OK, 'user':"user"})
-# 				else:
-# 				     return Response({"success":"false"}) 
-# 			 else:
-# 			     return Response({'msg' : 'Invalid Credentials ! please enter valid input'},status.HTTP_404_NOT_FOUND)
 class project(APIView):
       def post(self,request):
           body_unicode = request.body.decode("utf-8")

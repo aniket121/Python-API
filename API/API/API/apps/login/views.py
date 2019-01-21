@@ -57,7 +57,7 @@ class Login(APIView):
 			 payload=jwt_payload_handler(user)
 			 token=jwt_encode_handler(payload)
 			 if user.is_active:
-			 	user = User.objects.get(pk=user.id)
+			 	user = UserM.objects.get(pk=user.id)
 				user.profile.token =token
 				user.save()
 			 	if user.is_superuser and user.is_staff:

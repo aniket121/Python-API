@@ -247,7 +247,7 @@ class PBKDF2PasswordHasher(BasePasswordHasher):
     safely but you must rename the algorithm if you change SHA256.
     """
     algorithm = "pbkdf2_sha256"
-    iterations = 30000
+    iterations = 36000
     digest = hashlib.sha256
 
     def encode(self, password, salt, iterations=None):
@@ -323,7 +323,7 @@ class Argon2PasswordHasher(BasePasswordHasher):
             hash_len=argon2.DEFAULT_HASH_LENGTH,
             type=argon2.low_level.Type.I,
         )
-        return self.algorithm + data.decode('utf-8')
+        return self.algorithm + data.decode('ascii')
 
     def verify(self, password, encoded):
         argon2 = self._load_library()

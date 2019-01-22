@@ -60,12 +60,12 @@ class Login(APIView):
 			 	user = UserM.objects.get(pk=user.id)
 				user.profile.token =token
 				user.save()
-			 	if user.is_superuser and user.is_staff:
-			 	 	return Response({'id' : user.id,'token':token, 'username':user.username,'status':status.HTTP_200_OK, 'user':'superuser'})
-			 	elif user.is_staff:
-					return Response({'id' : user.id,'token':token, 'username':user.username,'status':status.HTTP_200_OK, 'user':"admin"})
+			 	if user.is_teacher:
+			 	 	return Response({'id' : user.id,'token':token, 'username':user.username,'status':status.HTTP_200_OK, 'user':'teacher'})
+			 	elif user.is_student:
+					return Response({'id' : user.id,'token':token, 'username':user.username,'status':status.HTTP_200_OK, 'user':"student"})
 				else:
-				    return Response({'id' : user.id,'token':token, 'username':user.username,'status':status.HTTP_200_OK, 'user':"user"})
+				    return Response({'id' : user.id,'token':token, 'username':user.username,'status':status.HTTP_200_OK, 'user':"suoeruser"})
 			 else:
 				return Response({"success":"false"}) 
 		  else:

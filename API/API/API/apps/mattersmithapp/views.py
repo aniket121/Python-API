@@ -36,6 +36,7 @@ import uuid
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.template import Context
+from permission import *
 
 username = "fry"
 password = "password_yo"
@@ -58,9 +59,8 @@ class PaginatedState(APIView):
 	  	 else:
 	  	  	pageNumbers.append({'next_page':'null','prev_page':'null'})
 class Users(PaginatedState,APIView):
-	  
-	  permission_classes = (permissions.IsAuthenticated,)
 	  authentication_classes = (JSONWebTokenAuthentication,)
+	  permission_classes = (IsStudentUserOnly,)
 	  def get(self,request):
 	  	  try:
 		  	  ModelData=UserM.objects.all()
@@ -79,7 +79,7 @@ class Users(PaginatedState,APIView):
 	  	  print "body==>",body
 	  	  serializer = UserSerializer(data=body)
 	  	  if serializer.is_valid():
-	  	  	 UserObject=UserM.objects.create_user(username=body['username'], first_name=body['first_name'], last_name=body['last_name'],password=body['password'],email = body['email'],bio=body['bio'])
+	  	  	 UserObject=UserM.objects.create_user(username=body['username'], first_name=body['first_name'], last_name=body['last_name'],password=body['password'],email = body['email'],bio=body['bio'],is_student=body["is_student"],is_teacher=body["is_teacher"])
 
 	  	  	 """
 	  	  	 email = EmailMessage('Subject',get_template('../templates/email.html').render(

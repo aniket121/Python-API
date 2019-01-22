@@ -81,6 +81,16 @@ class RelatedIn(In):
                     AND)
             return root_constraint.as_sql(compiler, connection)
         else:
+            if getattr(self.rhs, '_forced_pk', False):
+                self.rhs.clear_select_clause()
+                if getattr(self.lhs.output_field, 'primary_key', False):
+                    # A case like Restaurant.objects.filter(place__in=restaurant_qs),
+                    # where place is a OneToOneField and the primary key of
+                    # Restaurant.
+                    target_field = self.lhs.field.name
+                else:
+                    target_field = self.lhs.field.target_field.name
+                self.rhs.add_fields([target_field], True)
             return super(RelatedIn, self).as_sql(compiler, connection)
 
 
@@ -93,7 +103,7 @@ class RelatedLookupMixin(object):
             # ForeignKey to IntegerField given value 'abc'. The ForeignKey itself
             # doesn't have validation for non-integers, so we must run validation
             # using the target field.
-            if hasattr(self.lhs.output_field, 'get_path_info'):
+            if self.prepare_rhs and hasattr(self.lhs.output_field, 'get_path_info'):
                 # Get the target field. We can safely assume there is only one
                 # as we don't get to the direct value branch otherwise.
                 target_field = self.lhs.output_field.get_path_info()[-1].target_fields[-1]
